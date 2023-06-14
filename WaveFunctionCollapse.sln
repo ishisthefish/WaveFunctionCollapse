@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaveFunctionCollapse", "WaveFunctionCollapse\WaveFunctionCollapse.csproj", "{C28B1DB1-1EC1-4689-942F-2EF7191B395D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C28B1DB1-1EC1-4689-942F-2EF7191B395D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C28B1DB1-1EC1-4689-942F-2EF7191B395D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C28B1DB1-1EC1-4689-942F-2EF7191B395D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C28B1DB1-1EC1-4689-942F-2EF7191B395D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CD2B94FA-8FEA-4AD9-B7FE-B92C799A6F21}
+	EndGlobalSection
+EndGlobal
