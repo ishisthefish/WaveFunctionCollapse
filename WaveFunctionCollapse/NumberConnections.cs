@@ -9,8 +9,8 @@ namespace WaveFunctionCollapse
     //Code From ChatGPT :((
     internal class NumberConnections
     {
-        private Dictionary<int, List<int>> goodNumbers;
-        private Dictionary<int, List<int>> badNumbers;
+        public Dictionary<int, List<int>> goodNumbers;
+        public Dictionary<int, List<int>> badNumbers;
 
         public NumberConnections()
         {

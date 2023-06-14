@@ -15,6 +15,7 @@ namespace WaveFunctionCollapse
         Random random = new Random();
         int[,] array;
         List<int> goodNumbers;
+        List<int> badNumbers;
 
         private int currentX;
         private int currentY;
@@ -39,24 +40,27 @@ namespace WaveFunctionCollapse
         {
             arrayCreation = new ArrayCreation();
             numberConnections = new NumberConnections();
-            numberConnections.AddGoodNumber(1, new List<int> { 1, 2, 4 });
-            numberConnections.AddGoodNumber(2, new List<int> { 1, 3 });
-            numberConnections.AddGoodNumber(3, new List<int> { 2, 3, 4 });
+            numberConnections.AddGoodNumber(1, new List<int> { 1,2, 3 ,4 });
+            numberConnections.AddGoodNumber(2, new List<int> { 1, 3, 2 });
+            numberConnections.AddGoodNumber(3, new List<int> { 1, 2, 3 });
             numberConnections.AddGoodNumber(4, new List<int> { 1 });
 
-            numberConnections.AddBadNumber(1, new List<int> {3});
-            numberConnections.AddBadNumber(3, new List<int> { 1 });
+            numberConnections.AddBadNumber(1, new List<int> {0});
+            numberConnections.AddBadNumber(2, new List<int> { 4,});
+            numberConnections.AddBadNumber(3, new List<int> { 4 });
+            numberConnections.AddBadNumber(4, new List<int> { 3,4, 2 });
 
 
             array = arrayCreation.CreateArray(x, y);
-
-            int centerPointValue = random.Next(1, 3);
+            int count = numberConnections.goodNumbers.Count;
+            int centerPointValue = random.Next(1, count);
             currentX = (array.GetLength(0) - 1) / 2;
             currentY = (array.GetLength(1) - 1) / 2;
             //currentX = 0;
             //currentY = 0;
             AssignPoint(currentX, currentY, centerPointValue);
-          
+            goodNumbers = numberConnections.goodNumbers[centerPointValue];
+            badNumbers = numberConnections.badNumbers[centerPointValue];
             GetNeighbors(currentX, currentY);
 
             // Get the solve to do all the work m8!!
@@ -83,24 +87,24 @@ namespace WaveFunctionCollapse
             //top
             if (x > 0)
             {
-                if (array[x - 1, y] == 0) neighbors.Add((x - 1, y));
+                if (badNumbers.Contains(array[x - 1, y]) || array[x - 1, y] == 0) neighbors.Add((x - 1, y));
 
             }
             //bottom
             if (x < xLength)
             {
-                if (array[x + 1, y] == 0) neighbors.Add((x + 1, y));
+                if (badNumbers.Contains(array[x + 1, y]) || array[x + 1, y] == 0) neighbors.Add((x + 1, y));
             }
             //right
             if (y < yLength)
             {
-                if (array[x, y + 1] == 0)
+                if (badNumbers.Contains(array[x, y + 1]) || array[x, y + 1] == 0)
                 neighbors.Add((x, y + 1));
             }
             //left
             if (y > 0)
             {
-                if ((array[x, y - 1]) == 0)
+                if (badNumbers.Contains(array[x, y - 1]) || array[x, y - 1] == 0)
                 neighbors.Add((x, y - 1));
             }
 
@@ -140,17 +144,17 @@ namespace WaveFunctionCollapse
                 {
                     if (array[x, y] == 0)
                     {
-                        Console.Write(x + " " + y);
                         points.Add((x, y));
 
                     }
-                    Console.WriteLine();
+
                 }
             }
             return points;
         }
         public void SolveNeighbors(List<(int,int)> neighbors, List<int> goodNumbers)
         {
+
             foreach((int neighborX, int neighborY) in neighbors)
             {
                 int nRandom = random.Next(0, goodNumbers.Count());
@@ -162,14 +166,16 @@ namespace WaveFunctionCollapse
 
         public void SolveArray()
         {
-
+            List<int> canBe;
             
             while (!arrayCreation.IsComplete(array))
             {
-                List<int> goodNumbers = numberConnections.GetGoodNumbers(array[currentX, currentY]);
+
                 List<(int, int)> neighbors;
                 int currentPointValue = array[currentX, currentY];
+
                 goodNumbers = numberConnections.GetGoodNumbers(currentPointValue);
+                badNumbers = numberConnections.GetBadNumbers(currentPointValue);
 
                 if (GetNeighbors(currentX, currentY).Count != 0)
                 {
@@ -177,7 +183,10 @@ namespace WaveFunctionCollapse
                 }
                 else
                 {
-                    neighbors = GetUnsovledPoints();
+                    List<(int, int)> point = GetUnsovledPoints();
+                    neighbors = GetNeighbors(point[0].Item1, point[0].Item2);
+                    Console.WriteLine("//");
+
 
                 }
              
@@ -186,16 +195,15 @@ namespace WaveFunctionCollapse
 
 
 
-                arrayCreation.PrintArray(array);
                 currentX = neighbors[0].Item1;
-                Console.WriteLine("X" + currentX);
                 currentY = neighbors[0].Item2;
-                Console.WriteLine("Y" + currentY);
+                arrayCreation.PrintArray(array);
+                Console.WriteLine();
 
 
 
+            }
         }
-    }
     }
 
 }
