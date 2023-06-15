@@ -14,9 +14,18 @@ namespace WaveFunctionCollapse
 
 
 
-            Solve solve = new Solve(9,9);
+            Solve solve = new Solve(32,32);
+            Console.WriteLine();
+            Solve solve1 = new Solve(32, 32);
+            Console.WriteLine();
+            Solve solve2 = new Solve(32, 32);
+            Console.WriteLine();
+            Solve solve3 = new Solve(32, 32);
+            Console.WriteLine();
+            Solve solve4 = new Solve(32, 32);
+            Console.WriteLine();
 
-        
+
 
 
 

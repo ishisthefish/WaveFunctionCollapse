@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace WaveFunctionCollapse
@@ -40,15 +43,17 @@ namespace WaveFunctionCollapse
         {
             arrayCreation = new ArrayCreation();
             numberConnections = new NumberConnections();
-            numberConnections.AddGoodNumber(1, new List<int> { 1,2, 3 ,4 });
+            numberConnections.AddGoodNumber(1, new List<int> { 1,2, 3 ,4, 5 });
             numberConnections.AddGoodNumber(2, new List<int> { 1, 3, 2 });
             numberConnections.AddGoodNumber(3, new List<int> { 1, 2, 3 });
             numberConnections.AddGoodNumber(4, new List<int> { 1 });
+            numberConnections.AddGoodNumber(5, new List<int> {1});
 
             numberConnections.AddBadNumber(1, new List<int> {0});
-            numberConnections.AddBadNumber(2, new List<int> { 4,});
-            numberConnections.AddBadNumber(3, new List<int> { 4 });
-            numberConnections.AddBadNumber(4, new List<int> { 3,4, 2 });
+            numberConnections.AddBadNumber(2, new List<int> {0, 4, 5});
+            numberConnections.AddBadNumber(3, new List<int> {0, 4, 5 });
+            numberConnections.AddBadNumber(4, new List<int> {0, 3,4, 2, 5 });
+            numberConnections.AddBadNumber(5, new List<int> { 0, 2, 3, 4, 5 });
 
 
             array = arrayCreation.CreateArray(x, y);
@@ -66,10 +71,9 @@ namespace WaveFunctionCollapse
             // Get the solve to do all the work m8!!
 
             SolveArray();
-
+            arrayCreation.PrintArray(array);
 
             //arrayCreation.PrintArray(array);
-            List<(int, int)> list = GetUnsovledPoints();
 
         }
 
@@ -84,28 +88,53 @@ namespace WaveFunctionCollapse
             List<(int, int)> neighbors = new List<(int, int)>();
             int xLength = array.GetLength(0) - 1;
             int yLength = array.GetLength(1) - 1;
-            //top
+            //top (-1,0)
             if (x > 0)
             {
                 if (badNumbers.Contains(array[x - 1, y]) || array[x - 1, y] == 0) neighbors.Add((x - 1, y));
 
             }
-            //bottom
+            //top right (-1,+1)
+            if (x > 0 && y < yLength)
+            {
+                if (badNumbers.Contains(array[x - 1, y + 1]) || array[x - 1, y + 1] == 0) neighbors.Add((x - 1, y + 1));
+
+            }
+            //right (0,+1)
+            if (y < yLength)
+            {
+                if (badNumbers.Contains(array[x, y + 1]) || array[x, y + 1] == 0)
+                    neighbors.Add((x, y + 1));
+            }
+            //bottom right (+1,+1)
+            if (y < yLength && x < xLength)
+            {
+                if (badNumbers.Contains(array[x + 1, y + 1]) || array[x + 1, y + 1] == 0)
+                    neighbors.Add((x + 1, y + 1));
+            }
+            //bottom (+1,0)
             if (x < xLength)
             {
                 if (badNumbers.Contains(array[x + 1, y]) || array[x + 1, y] == 0) neighbors.Add((x + 1, y));
             }
-            //right
-            if (y < yLength)
+            //bottom left (+1,-1)
+            if (y > 0 && x < xLength)
             {
-                if (badNumbers.Contains(array[x, y + 1]) || array[x, y + 1] == 0)
-                neighbors.Add((x, y + 1));
+                if (badNumbers.Contains(array[x + 1, y - 1]) || array[x + 1, y - 1] == 0)
+                    neighbors.Add((x + 1, y - 1));
             }
-            //left
+
+            //left (0,-1)
             if (y > 0)
             {
                 if (badNumbers.Contains(array[x, y - 1]) || array[x, y - 1] == 0)
                 neighbors.Add((x, y - 1));
+            }
+            //top left (-1,-1)
+            if (y > 0 && x > 0)
+            {
+                if (badNumbers.Contains(array[x - 1 , y - 1]) || array[x - 1, y - 1] == 0)
+                    neighbors.Add((x - 1, y - 1));
             }
 
 
@@ -166,7 +195,6 @@ namespace WaveFunctionCollapse
 
         public void SolveArray()
         {
-            List<int> canBe;
             
             while (!arrayCreation.IsComplete(array))
             {
@@ -184,12 +212,20 @@ namespace WaveFunctionCollapse
                 else
                 {
                     List<(int, int)> point = GetUnsovledPoints();
-                    neighbors = GetNeighbors(point[0].Item1, point[0].Item2);
-                    Console.WriteLine("//");
+                    if(GetNeighbors(point[0].Item1, point[0].Item2).Count == 0)
+                    {
+                        neighbors = GetNeighbors(point[0].Item1, point[0].Item2);
+
+                    }
+                    else
+                    {
+                        neighbors = new List<(int, int)> { (point[0].Item1, point[0].Item2) };
+
+                    }
 
 
                 }
-             
+
 
                 SolveNeighbors(neighbors, goodNumbers);
 
@@ -197,8 +233,11 @@ namespace WaveFunctionCollapse
 
                 currentX = neighbors[0].Item1;
                 currentY = neighbors[0].Item2;
-                arrayCreation.PrintArray(array);
-                Console.WriteLine();
+                //arrayCreation.PrintArray(array);
+                //Console.WriteLine();
+                //Thread.Sleep(50); // Wait for 5 seconds
+
+                //Console.Clear();
 
 
 
