@@ -44,16 +44,16 @@ namespace WaveFunctionCollapse
             arrayCreation = new ArrayCreation();
             numberConnections = new NumberConnections();
             numberConnections.AddGoodNumber(1, new List<int> { 1,2, 3 ,4, 5 });
-            numberConnections.AddGoodNumber(2, new List<int> { 1, 3, 2 });
+            numberConnections.AddGoodNumber(2, new List<int> { 1, 3, 2, 5 });
             numberConnections.AddGoodNumber(3, new List<int> { 1, 2, 3 });
             numberConnections.AddGoodNumber(4, new List<int> { 1 });
-            numberConnections.AddGoodNumber(5, new List<int> {1});
+            numberConnections.AddGoodNumber(5, new List<int> {1, 2});
 
             numberConnections.AddBadNumber(1, new List<int> {0});
-            numberConnections.AddBadNumber(2, new List<int> {0, 4, 5});
+            numberConnections.AddBadNumber(2, new List<int> {0, 4});
             numberConnections.AddBadNumber(3, new List<int> {0, 4, 5 });
             numberConnections.AddBadNumber(4, new List<int> {0, 3,4, 2, 5 });
-            numberConnections.AddBadNumber(5, new List<int> { 0, 2, 3, 4, 5 });
+            numberConnections.AddBadNumber(5, new List<int> { 0, 3, 4, 5 });
 
 
             array = arrayCreation.CreateArray(x, y);
@@ -212,7 +212,7 @@ namespace WaveFunctionCollapse
                 else
                 {
                     List<(int, int)> point = GetUnsovledPoints();
-                    if(GetNeighbors(point[0].Item1, point[0].Item2).Count == 0)
+                    if (GetNeighbors(point[0].Item1, point[0].Item2).Count != 0)
                     {
                         neighbors = GetNeighbors(point[0].Item1, point[0].Item2);
 
@@ -223,19 +223,22 @@ namespace WaveFunctionCollapse
 
                     }
 
-
                 }
 
 
-                SolveNeighbors(neighbors, goodNumbers);
+
+                    SolveNeighbors(neighbors, goodNumbers);
 
 
 
-                currentX = neighbors[0].Item1;
-                currentY = neighbors[0].Item2;
+                    currentX = neighbors[0].Item1;
+                    currentY = neighbors[0].Item2;
+
+
+
                 //arrayCreation.PrintArray(array);
                 //Console.WriteLine();
-                //Thread.Sleep(50); // Wait for 5 seconds
+                //Thread.Sleep(1); // Wait for 5 seconds
 
                 //Console.Clear();
 
